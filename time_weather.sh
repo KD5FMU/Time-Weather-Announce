@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This script was created to simplify the process of adding Time and Weather condition annoucements
-# File created by Freddie Mac - KD5FMU with the help of ChatGPT.
+# File created by Freddie Mac - KD5FMU on Sunday, November 17th 2024 with the help of ChatGPT.
 
 # Define variables
 SAYTIME_URL="https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/saytime.pl"
