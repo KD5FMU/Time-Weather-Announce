@@ -18,6 +18,6 @@ sudo chmod +x time_weather.sh
 
 then run it
 ```
-./time_weather.sh
+sudo ./time_weather.sh
 ```
 
