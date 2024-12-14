@@ -1,7 +1,12 @@
 # Time-Weather-Announce
 Time and Weather Annoucement
 
-Download this file
+Goto the root directory
+```
+cd ~
+```
+
+Then Download this file
 ```
 https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/time_weather.sh
 ```
@@ -9,5 +14,10 @@ and then make it executable.
 
 ```
 sudo chmod +x time_weather.sh
+```
+
+then run it
+```
+./time_weather.sh
 ```
 
