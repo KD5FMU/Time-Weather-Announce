@@ -27,5 +27,13 @@ Then you will have to go into the sudo crontab and make changes to the appropria
 00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE_NUMBER > /dev/null)
 ```
 Replace YOUR_ZIP with your local Zip Code and YOUR_NODE_NUMBER with your local AllStarLink node number.
-Make sure you leave a space between your zio code and node number.
+Make sure you leave a space between your zip code and node number.
+
+You don't have to but prob should reboot your node. Your can test the node by running this line 
+
+```
+sudo perl /usr/local/sbin/saytime.pl Your_Zip_Code Your_Node_Number
+```
+
+makeing the appropriate changes to your Zip Code and Node Number and then hit enter and of all went well you will hear the time and weather conditions announce.
 
