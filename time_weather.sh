@@ -54,7 +54,7 @@ sudo updatedb
 
 # Define the cron job and its preceding comment
 CRON_COMMENT="# Top of the Hour Time and Weather Announcement"
-CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE"
+CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE > /dev/null)"
 
 # Add the cron job and comment to the root user's crontab
 (sudo crontab -l 2>/dev/null; echo "$CRON_COMMENT"; echo "$CRON_JOB") | sudo crontab -
