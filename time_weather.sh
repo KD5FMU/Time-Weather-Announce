@@ -46,10 +46,21 @@ sudo ln -s /usr/bin/plocate /usr/bin/locate
 sudo updatedb
 
 # Add line to sudo crontab
-CRON_LINE="00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE > /dev/null)"
-if ! sudo crontab -l | grep -q "$CRON_LINE"; then
-  echo "Adding line to sudo crontab..."
-  (sudo crontab -l; echo "$CRON_LINE") | sudo crontab -
-fi
+#CRON_LINE="00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE > /dev/null)"
+#if ! sudo crontab -l | grep -q "$CRON_LINE"; then
+#  echo "Adding line to sudo crontab..."
+# (sudo crontab -l; echo "$CRON_LINE") | sudo crontab -
+#fi
+
+# Define the cron job and its preceding comment
+CRON_COMMENT="# Top of the Hour Time and Weather Announcement"
+CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE"
+
+# Add the cron job and comment to the root user's crontab
+(sudo crontab -l 2>/dev/null; echo "$CRON_COMMENT"; echo "$CRON_JOB") | sudo crontab -
+
+# Print the current crontab to verify
+echo "Current crontab for root:"
+sudo crontab -l
 
 echo "Setup completed successfully!"
