@@ -26,6 +26,6 @@ Then you will have to go into the sudo crontab and make changes to the appropria
 ```
 00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE_NUMBER > /dev/null)
 ```
-replace YOUR_ZIP with your local Zip Code and YOUR_NODE_NUMBER with your local AllStarLink node number.
+Replace YOUR_ZIP with your local Zip Code and YOUR_NODE_NUMBER with your local AllStarLink node number.
 Make sure you leave a space between your zio code and node number.
 
