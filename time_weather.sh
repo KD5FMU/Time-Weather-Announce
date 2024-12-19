@@ -45,11 +45,16 @@ sudo rm -f /usr/bin/locate
 sudo ln -s /usr/bin/plocate /usr/bin/locate
 sudo updatedb
 
-# Add line to sudo crontab
-CRON_LINE="# This is the Sudo Crontab Page)"
-if ! sudo crontab -l | grep -q "$CRON_LINE"; then
-  echo "Adding line to sudo crontab..."
- (sudo crontab -l; echo "$CRON_LINE") | sudo crontab -
+# Define the comment to be added
+COMMENT="# This is the sudo crontab"
+
+# Check if the comment is already at the top of the crontab
+if ! sudo crontab -l | head -n 1 | grep -q "$COMMENT"; then
+  # Add the comment to the top of the crontab
+  echo "$COMMENT" | sudo crontab -l | cat - <(echo "$COMMENT") | sudo crontab -
+  echo "Comment added to the top of the sudo crontab."
+else
+  echo "Comment already exists at the top of the sudo crontab."
 fi
 
 # Define the cron job and its preceding comment
