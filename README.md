@@ -29,7 +29,9 @@ Then you will have to go into the sudo crontab and make changes to the appropria
 Replace YOUR_ZIP with your local Zip Code and YOUR_NODE_NUMBER with your local AllStarLink node number.
 Make sure you leave a space between your zip code and node number.
 
-You don't have to but prob should reboot your node. Your can test the node by running this line 
+You don't have to but prob should reboot your node.
+
+Your can test the node by running this line 
 
 ```
 sudo perl /usr/local/sbin/saytime.pl Your_Zip_Code Your_Node_Number
