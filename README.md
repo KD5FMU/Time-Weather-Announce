@@ -1,4 +1,4 @@
-![HRC Logo](https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/HRC-Circle-Transparent1.svg)
+![HRC Logo](https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/HRC-Circle-Transparent2.svg)
 
 # Time-Weather-Announce
 Time and Weather Annoucement
