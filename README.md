@@ -43,6 +43,9 @@ sudo perl /usr/local/sbin/saytime.pl Your_Zip_Code Your_Node_Number
 
 makeing the appropriate changes to your Zip Code and Node Number and then hit enter and of all went well you will hear the time and weather conditions announce.
 
+You can use this video as a reference.
+https://youtu.be/DJ9w9pNzkyo?si=BcNo6ONEnXvT-KM0
+
 It is my hope that you find this script file very helpful and useful. 
 
 73 DE KD5FMU
