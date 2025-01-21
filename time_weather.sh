@@ -1,71 +1,102 @@
-#!/bin/bash
+#!/bin/sh
+#
+# Time and Weather Announcement Setup Script
+# Copyright (C) 2024 Freddie Mac - KD5FMU
+# Copyright (C) 2025 Jory A. Pratt - W5GLE
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/gpl-2.0.html>.
 
-# This script was created to simplify the process of adding Time and Weather condition annoucements
-# File created by Freddie Mac - KD5FMU on Sunday, November 17th 2024 with the help of ChatGPT.
+# Check if the script is run as root
+if [ "$(id -u)" != "0" ]; then
+    echo "Please run this script as root using 'sudo' or log in as root." >&2
+    exit 1
+fi
 
-# Define variables
-SAYTIME_URL="https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/saytime.pl"
-WEATHER_URL="https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/weather.sh"
-INI_URL="https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/weather.ini"
+# Check for required arguments: ZIP code and node number
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 <ZIP_CODE> <NODE_NUMBER>" >&2
+    exit 1
+fi
+
+# Assign input arguments to variables
+ZIP_CODE="$1"
+NODE_NUMBER="$2"
+
+# URLs for required files
+BASE_URL="https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/"
+SAYTIME_URL="${BASE_URL}saytime.pl"
+WEATHER_URL="${BASE_URL}weather.sh"
+INI_URL="${BASE_URL}weather.ini"
 SOUND_ZIP_URL="http://hamradiolife.org/downloads/sound_files.zip"
+
+# Directories and files
 SOUNDS_DIR="/var/lib/asterisk/sounds"
 LOCAL_DIR="/etc/asterisk/local"
 BIN_DIR="/usr/local/sbin"
-ZIP_FILE="$SOUNDS_DIR/sound_files.zip"
+ZIP_FILE="${SOUNDS_DIR}/sound_files.zip"
 
-# Ensure dependencies are installed
-echo "Installing bc..."
-sudo apt install -y bc || { echo "Failed to install bc."; exit 1; }
+# Ensure necessary tools are installed
+echo "Installing required packages..."
+apt install -y bc zip plocate || {
+    echo "Failed to install packages. Ensure you have an active internet connection."
+    exit 1
+}
+
+# Update plocate database
+echo "Updating plocate database..."
+updatedb || {
+    echo "Failed to update the plocate database."
+    exit 1
+}
 
 # Download and set up scripts
-echo "Downloading saytime.pl and weather.sh..."
-sudo curl -o "$BIN_DIR/saytime.pl" "$SAYTIME_URL" && sudo chmod +x "$BIN_DIR/saytime.pl"
-sudo curl -o "$BIN_DIR/weather.sh" "$WEATHER_URL" && sudo chmod +x "$BIN_DIR/weather.sh"
+echo "Setting up required scripts..."
+mkdir -p "$BIN_DIR"
+curl -s -o "${BIN_DIR}/saytime.pl" "$SAYTIME_URL" && chmod +x "${BIN_DIR}/saytime.pl"
+curl -s -o "${BIN_DIR}/weather.sh" "$WEATHER_URL" && chmod +x "${BIN_DIR}/weather.sh"
 
-# Create local directory if it doesn't exist
-if [ ! -d "$LOCAL_DIR" ]; then
-  echo "Creating $LOCAL_DIR..."
-  sudo mkdir -p "$LOCAL_DIR"
-fi
+# Create configuration directory if not existing
+echo "Creating configuration directory..."
+mkdir -p "$LOCAL_DIR"
 
-# Download weather.ini to the local directory
-echo "Downloading weather.ini..."
-sudo curl -o "$LOCAL_DIR/weather.ini" "$INI_URL"
+# Download configuration file
+echo "Downloading weather configuration file..."
+curl -s -o "${LOCAL_DIR}/weather.ini" "$INI_URL"
 
-# Download and unzip sound files
+# Download and extract sound files
 echo "Downloading and extracting sound files..."
-sudo curl -o "$ZIP_FILE" "$SOUND_ZIP_URL"
-sudo unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR"
-sudo rm -f "$ZIP_FILE"
+curl -s -o "$ZIP_FILE" "$SOUND_ZIP_URL"
+unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR" > /dev/null 2>&1
+rm -f "$ZIP_FILE"
 
-# Install and configure plocate
-echo "Installing and configuring plocate..."
-sudo apt install -y plocate
-sudo rm -f /usr/bin/locate
-sudo ln -s /usr/bin/plocate /usr/bin/locate
-sudo updatedb
+# Set up a cron job for hourly announcements
+echo "Configuring hourly time and weather announcements..."
+CRON_COMMENT="# Hourly Time and Weather Announcement"
+CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 /usr/bin/perl ${BIN_DIR}/saytime.pl $ZIP_CODE $NODE_NUMBER >/dev/null)"
 
-# Define the comment to be added
-COMMENT="# This is the sudo crontab"
-
-# Check if the comment is already at the top of the crontab
-if ! sudo crontab -l | head -n 1 | grep -q "$COMMENT"; then
-  # Add the comment to the top of the crontab
-  echo "$COMMENT" | sudo crontab -l | cat - <(echo "$COMMENT") | sudo crontab -
-  echo "Comment added to the top of the sudo crontab."
+# Check and add the cron job if it doesn't already exist
+CRONTAB_TMP=$(mktemp)
+crontab -l 2>/dev/null > "$CRONTAB_TMP"
+if ! grep -Fq "$CRON_COMMENT" "$CRONTAB_TMP" && ! grep -Fq "$CRON_JOB" "$CRONTAB_TMP"; then
+    {
+        echo "$CRON_COMMENT"
+        echo "$CRON_JOB"
+    } >> "$CRONTAB_TMP"
+    crontab "$CRONTAB_TMP"
+    echo "Cron job added."
 else
-  echo "Comment already exists at the top of the sudo crontab."
+    echo "Cron job already exists."
 fi
-
-# Define the cron job and its preceding comment
-CRON_COMMENT="# Top of the Hour Time and Weather Announcement"
-CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 ; /usr/bin/perl /usr/local/sbin/saytime.pl YOUR_ZIP YOUR_NODE > /dev/null)"
-
-# Add the cron job and comment to the root user's crontab
-(sudo crontab -l 2>/dev/null; echo "$CRON_COMMENT"; echo "$CRON_JOB") | sudo crontab -
-
-# Print the current crontab to verify
-echo "Current crontab for root:"
-sudo crontab -l
+rm "$CRONTAB_TMP"
 
 echo "Setup completed successfully!"
