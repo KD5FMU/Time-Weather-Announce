@@ -76,7 +76,7 @@ curl -s -o "${LOCAL_DIR}/weather.ini" "$INI_URL"
 # Download and extract sound files
 echo "Downloading and extracting sound files..."
 curl -s -o "$ZIP_FILE" "$SOUND_ZIP_URL"
-unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR"
+unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR" > /dev/null 2>&1
 rm -f "$ZIP_FILE"
 
 # Set up a cron job for hourly announcements
