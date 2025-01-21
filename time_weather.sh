@@ -40,6 +40,13 @@ apt install -y bc zip plocate || {
     exit 1
 }
 
+# Update plocate database
+echo "Updating plocate database..."
+updatedb || {
+    echo "Failed to update the plocate database."
+    exit 1
+}
+
 # Download and set up scripts
 echo "Setting up required scripts..."
 mkdir -p "$BIN_DIR"
