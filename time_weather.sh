@@ -40,7 +40,7 @@ INI_URL="${BASE_URL}weather.ini"
 SOUND_ZIP_URL="http://hamradiolife.org/downloads/sound_files.zip"
 
 # Directories and files
-SOUNDS_DIR="/var/lib/asterisk/sounds"
+SOUNDS_DIR="/usr/local/share/asterisk/sounds/custom"
 LOCAL_DIR="/etc/asterisk/local"
 BIN_DIR="/usr/local/sbin"
 ZIP_FILE="${SOUNDS_DIR}/sound_files.zip"
@@ -65,6 +65,10 @@ mkdir -p "$BIN_DIR"
 curl -s -o "${BIN_DIR}/saytime.pl" "$SAYTIME_URL" && chmod +x "${BIN_DIR}/saytime.pl"
 curl -s -o "${BIN_DIR}/weather.sh" "$WEATHER_URL" && chmod +x "${BIN_DIR}/weather.sh"
 
+# Edit the path for sound files in saytime.pl
+echo "Adjusting sounds dir in "${BIN_DIR}/saytime.pl""
+sed -i.bak 's|/var/lib/asterisk/sounds|/usr/local/share/asterisk/sounds/custom|' "${BIN_DIR}/saytime.pl"
+
 # Create configuration directory if not existing
 echo "Creating configuration directory..."
 mkdir -p "$LOCAL_DIR"
@@ -72,6 +76,19 @@ mkdir -p "$LOCAL_DIR"
 # Download configuration file
 echo "Downloading weather configuration file..."
 curl -s -o "${LOCAL_DIR}/weather.ini" "$INI_URL"
+
+# Check if directory exists and create it
+if [ ! -d "$SOUNDS_DIR" ]; then
+    # Create the directory with the necessary permissions
+    mkdir -p "$SOUNDS_DIR"
+    echo "Directory '$SOUNDS_DIR' created."
+    
+    # Set ownership to root:asterisk
+    chown root:asterisk "$SOUNDS_DIR"
+    echo "Ownership of '$SOUNDS_DIR' set to root:asterisk."
+else
+    echo "Directory '$SOUNDS_DIR' already exists."
+fi
 
 # Download and extract sound files
 echo "Downloading and extracting sound files..."
@@ -98,5 +115,20 @@ else
     echo "Cron job already exists."
 fi
 rm "$CRONTAB_TMP"
+
+# Directory to check
+dir_to_check="/var/lib/asterisk/sounds"
+
+# Count the number of directories inside the specified directory, excluding the parent directory (.)
+dir_count=$(find "$dir_to_check" -mindepth 1 -maxdepth 1 -type d | wc -l)
+
+# Check if there are more than two directories
+if [ "$dir_count" -gt 2 ]; then
+  echo "You have files which don't belong"
+  echo "You can clean up the directory with the following commands"
+  echo "rm -r $dir_to_check/*"
+  echo "mkdir -p $dir_to_check/{en,custom}"
+  echo "chown asterisk:asterisk -R $dir_to_check/*"
+fi
 
 echo "Setup completed successfully!"

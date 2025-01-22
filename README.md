@@ -28,10 +28,10 @@ sudo ./time_weather.sh ZIP/AIRPORTCODE NODENUMBER
 Your can test the node by running this line 
 
 ```
-sudo perl /usr/local/sbin/saytime.pl ZIP/AIRPORTCODE NODENUMBER
+sudo saytime.pl ZIP/AIRPORTCODE NODENUMBER
 ```
 
-makeing the appropriate changes to your Zip Code and Node Number and then hit enter and if all went well you will hear the time and weather conditions announce.
+make the appropriate changes to your ZIP/AIRPORTCODE and NODENUMBER and then hit enter, if all went well you will hear the time and weather conditions announce.
 
 You can use this video as a reference.
 https://youtu.be/DJ9w9pNzkyo?si=BcNo6ONEnXvT-KM0
