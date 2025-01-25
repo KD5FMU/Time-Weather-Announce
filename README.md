@@ -7,7 +7,7 @@ This script file will install the needed files and scripts to initiate the Top o
 
 Goto the $HOME directory
 ```
-cd ~
+cd 
 ```
 
 Then Download this file
