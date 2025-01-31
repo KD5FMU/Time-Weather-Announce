@@ -52,13 +52,6 @@ apt install -y bc zip plocate || {
     exit 1
 }
 
-# Update plocate database
-echo "Updating plocate database..."
-updatedb || {
-    echo "Failed to update the plocate database."
-    exit 1
-}
-
 # Download and set up scripts
 echo "Setting up required scripts..."
 mkdir -p "$BIN_DIR"
@@ -130,5 +123,12 @@ if [ "$dir_count" -gt 2 ]; then
   echo "mkdir -p $dir_to_check/{en,custom}"
   echo "chown asterisk:asterisk -R $dir_to_check/*"
 fi
+
+# Update plocate database
+echo "Updating plocate database..."
+updatedb || {
+    echo "Failed to update the plocate database."
+    exit 1
+}
 
 echo "Setup completed successfully!"
