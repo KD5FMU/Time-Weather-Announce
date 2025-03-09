@@ -40,7 +40,7 @@ INI_URL="${BASE_URL}weather.ini"
 SOUND_ZIP_URL="http://hamradiolife.org/downloads/sound_files.zip"
 
 # Directories and files
-SOUNDS_DIR="/usr/local/share/asterisk/sounds/custom"
+SOUNDS_DIR="/var/lib/asterisk/sounds/custom"
 LOCAL_DIR="/etc/asterisk/local"
 BIN_DIR="/usr/local/sbin"
 ZIP_FILE="${SOUNDS_DIR}/sound_files.zip"
@@ -65,10 +65,11 @@ sed -i.bak 's|/var/lib/asterisk/sounds|/usr/local/share/asterisk/sounds/custom|'
 # Create configuration directory if not existing
 echo "Creating configuration directory..."
 mkdir -p "$LOCAL_DIR"
+chown asterisk:asterisk "$LOCAL_DIR"
 
 # Download configuration file
 echo "Downloading weather configuration file..."
-curl -s -o "${LOCAL_DIR}/weather.ini" "$INI_URL"
+sudo -u asterisk curl -s -o "${LOCAL_DIR}/weather.ini" "$INI_URL"
 
 # Check if directory exists and create it
 if [ ! -d "$SOUNDS_DIR" ]; then
@@ -77,7 +78,7 @@ if [ ! -d "$SOUNDS_DIR" ]; then
     echo "Directory '$SOUNDS_DIR' created."
     
     # Set ownership to root:asterisk
-    chown root:asterisk "$SOUNDS_DIR"
+    chown asterisk:asterisk "$SOUNDS_DIR"
     echo "Ownership of '$SOUNDS_DIR' set to root:asterisk."
 else
     echo "Directory '$SOUNDS_DIR' already exists."
@@ -86,7 +87,7 @@ fi
 # Download and extract sound files
 echo "Downloading and extracting sound files..."
 curl -s -o "$ZIP_FILE" "$SOUND_ZIP_URL"
-unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR" > /dev/null 2>&1
+sudo -u asterisk unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR" > /dev/null 2>&1
 rm -f "$ZIP_FILE"
 
 # Set up a cron job for hourly announcements
@@ -96,13 +97,13 @@ CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 /usr/bin/perl ${BIN_DIR}/saytime.pl 
 
 # Check and add the cron job if it doesn't already exist
 CRONTAB_TMP=$(mktemp)
-crontab -l 2>/dev/null > "$CRONTAB_TMP"
+sudo -u asterisk crontab -l 2>/dev/null > "$CRONTAB_TMP"
 if ! grep -Fq "$CRON_COMMENT" "$CRONTAB_TMP" && ! grep -Fq "$CRON_JOB" "$CRONTAB_TMP"; then
     {
         echo "$CRON_COMMENT"
         echo "$CRON_JOB"
     } >> "$CRONTAB_TMP"
-    crontab "$CRONTAB_TMP"
+    sudo -u asterisk crontab "$CRONTAB_TMP"
     echo "Cron job added."
 else
     echo "Cron job already exists."
