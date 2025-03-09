@@ -97,13 +97,13 @@ CRON_JOB="00 00-23 * * * (/usr/bin/nice -19 /usr/bin/perl ${BIN_DIR}/saytime.pl 
 
 # Check and add the cron job if it doesn't already exist
 CRONTAB_TMP=$(mktemp)
-sudo -u asterisk crontab -l 2>/dev/null > "$CRONTAB_TMP"
+crontab -u asterisk -l 2>/dev/null > "$CRONTAB_TMP"
 if ! grep -Fq "$CRON_COMMENT" "$CRONTAB_TMP" && ! grep -Fq "$CRON_JOB" "$CRONTAB_TMP"; then
     {
         echo "$CRON_COMMENT"
         echo "$CRON_JOB"
     } >> "$CRONTAB_TMP"
-    sudo -u asterisk crontab "$CRONTAB_TMP"
+    crontab -u asterisk "$CRONTAB_TMP"
     echo "Cron job added."
 else
     echo "Cron job already exists."
