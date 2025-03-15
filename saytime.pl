@@ -243,6 +243,7 @@ system(@proglist);
 if ($Silent == "0") {
 	@proglist = ("/usr/sbin/asterisk -rx \"rpt localplay " . $mynode . " " . $outdir . "/current-time\"");
 	system(@proglist);
+	sleep 5; # We must sleep so asterisk can read the file before we clean up
 #
 # Note that unlinking the audio file may prevent it from playing when the system is busy.
 #
@@ -252,6 +253,13 @@ if ($Silent == "0") {
 	{ print "\nSaved time and weather sound file to $outdir/current-time.gsm\n\n"
 } elsif ($Silent == "2")
 	{ print "\nSaved weather sound file to $outdir/current-time.gsm\n\n"
+}
+
+# Cleanup /tmp files
+unlink "$outdir/temperature";
+unlink "$outdir/condition.gsm";
+if ($Silent != "1" && $Silent != "2") {
+    unlink "$outdir/current-time.gsm";
 }
 
 # end of saytime.pl
