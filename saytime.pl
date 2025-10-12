@@ -108,7 +108,7 @@ if (! -f "/usr/local/sbin/weather.sh" ) {
 
 if ($wx eq "YES") {
 
-  @proglist = ("/usr/local/sbin/weather.sh " . $wxid);
+  @proglist = ("/usr/local/sbin/weather.sh", $wxid);
   system(@proglist);
 
   if (-f "$outdir/temperature") { 
@@ -127,7 +127,7 @@ if ($wx eq "YES") {
 
 $filename = '/etc/asterisk/local/saytime_header';
 if ( <$filename.*> ) {
-	@proglist = ("/usr/sbin/asterisk -rx \"rpt localplay " . $mynode . " /etc/asterisk/local/saytime_header\"");
+	@proglist = ("/usr/sbin/asterisk", "-rx", "rpt localplay " . $mynode . " /etc/asterisk/local/saytime_header");
 	system(@proglist);
 }
 
@@ -241,7 +241,7 @@ system(@proglist);
 # Say the time on the local node
 #
 if ($Silent == "0") {
-	@proglist = ("/usr/sbin/asterisk -rx \"rpt localplay " . $mynode . " " . $outdir . "/current-time\"");
+	@proglist = ("/usr/sbin/asterisk", "-rx", "rpt localplay " . $mynode . " " . $outdir . "/current-time");
 	system(@proglist);
 	sleep 5; # We must sleep so asterisk can read the file before we clean up
 #
