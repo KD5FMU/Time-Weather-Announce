@@ -7,7 +7,7 @@ This script file will install the needed files and scripts to initiate the Top o
 
 Goto the $HOME directory
 ```
-cd 
+cd
 ```
 
 Then Download this file
@@ -25,7 +25,7 @@ then run it
 sudo ./time_weather.sh ZIP/AIRPORTCODE NODENUMBER
 ```
 
-Your can test the node by running this line 
+Your can test the node by running this line
 
 ```
 sudo saytime.pl ZIP/AIRPORTCODE NODENUMBER
@@ -36,7 +36,7 @@ make the appropriate changes to your ZIP/AIRPORTCODE and NODENUMBER and then hit
 You can use this video as a reference.
 https://youtu.be/DJ9w9pNzkyo?si=BcNo6ONEnXvT-KM0
 
-It is my hope that you find this script file very helpful and useful. 
+It is my hope that you find this script file very helpful and useful.
 
 73 DE KD5FMU
 
