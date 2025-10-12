@@ -75,7 +75,7 @@ if [ ! -d "$SOUNDS_DIR" ]; then
     # Create the directory with the necessary permissions
     mkdir -p "$SOUNDS_DIR"
     echo "Directory '$SOUNDS_DIR' created."
-    
+
     # Set ownership to root:asterisk
     chown root:asterisk "$SOUNDS_DIR"
     echo "Ownership of '$SOUNDS_DIR' set to root:asterisk."

@@ -4,7 +4,7 @@
 #
 # Copyright 2025, Jory A. Pratt, W5GLE
 # Based on original work by D. Crompton, WA3DSP
-# Modified by:              Joe (KD2NFC) 
+# Modified by:              Joe (KD2NFC)
 # Enhanced by:              W5GLE team for global operations
 # Date:                     2025-10-11
 # Version:                  2.7.4
@@ -177,18 +177,18 @@ else
       break
     fi
   done
-  
+
   # If no config found, try to create one
   if [ $config_loaded -eq 0 ]; then
     for config_file in "${CONFIG_PATHS[@]}"; do
       # Try to create config file
       config_dir="$(dirname "$config_file")"
-      
+
       # Create directory if needed and we have permissions
       if [ ! -d "$config_dir" ]; then
         mkdir -p "$config_dir" 2>/dev/null || continue
       fi
-      
+
       # Try to create config file
       if cat > "$config_file" 2>/dev/null <<'EOF'
 ; ============================================================================
@@ -221,7 +221,7 @@ DEFAULT_PROVIDER = auto
 ; ============================================================================
 ; USAGE EXAMPLES
 ; ============================================================================
-; 
+;
 ; Test weather for your location:
 ;   weather.sh KJFK v          # JFK Airport
 ;   weather.sh 90210 v         # Beverly Hills, CA
@@ -274,7 +274,7 @@ is_icao_code(){
 # Check if input is special location
 is_special_location(){
   local loc="$(echo "$1" | toupper | tr -d ' ')"
-  
+
   case "$loc" in
     # Antarctica
     SOUTHPOLE|MCMURDO|PALMER|VOSTOK|CASEY|MAWSON|DAVIS|SCOTTBASE|SYOWA|CONCORDIA|HALLEY|DUMONT|SANAE)
@@ -308,7 +308,7 @@ is_special_location(){
 # Get coordinates for special locations
 get_special_coordinates(){
   local loc="$(echo "$1" | toupper | tr -d ' ')"
-  
+
   case "$loc" in
     # ===== ANTARCTICA =====
     SOUTHPOLE)    echo "-90.0|0.0" ;;
@@ -324,7 +324,7 @@ get_special_coordinates(){
     HALLEY)       echo "-75.58|-26.66" ;;
     DUMONT)       echo "-66.66|140.01" ;;
     SANAE)        echo "-71.67|-2.84" ;;
-    
+
     # ===== ARCTIC =====
     ALERT)        echo "82.50|-62.35" ;;
     EUREKA)       echo "79.99|-85.93" ;;
@@ -333,7 +333,7 @@ get_special_coordinates(){
     BARROW)       echo "71.29|-156.79" ;;
     RESOLUTE)     echo "74.72|-94.83" ;;
     GRISE)        echo "76.42|-82.90" ;;
-    
+
     # ===== REMOTE ISLANDS (DXpedition Sites) =====
     ASCENSION)    echo "-7.95|-14.36" ;;
     STHELENA)     echo "-15.97|-5.72" ;;
@@ -344,7 +344,7 @@ get_special_coordinates(){
     CROZET)       echo "-46.43|51.86" ;;
     AMSTERDAM)    echo "-37.83|77.57" ;;
     MACQUARIE)    echo "-54.62|158.86" ;;
-    
+
     # ===== PACIFIC ISLANDS =====
     MIDWAY)       echo "28.21|-177.38" ;;
     WAKE)         echo "19.28|166.65" ;;
@@ -354,33 +354,33 @@ get_special_coordinates(){
     HOWLAND)      echo "0.81|-176.62" ;;
     BAKER)        echo "0.19|-176.48" ;;
     KINGMAN)      echo "6.38|-162.42" ;;
-    
+
     # ===== INDIAN OCEAN =====
     DIEGO)        echo "-7.26|72.40" ;;
     CHAGOS)       echo "-7.26|72.40" ;;
     COCOS)        echo "-12.19|96.83" ;;
     CHRISTMAS)    echo "-10.49|105.62" ;;
-    
+
     # ===== SOUTH ATLANTIC =====
     FALKLANDS)    echo "-51.70|-59.52" ;;
     SOUTHGEORGIA) echo "-54.28|-36.51" ;;
     SOUTHSANDWICH) echo "-59.43|-26.35" ;;
-    
+
     # ===== PACIFIC POLYNESIA =====
     MARQUESAS)    echo "-9.00|-140.00" ;;
     EASTER)       echo "-27.11|-109.36" ;;
     PITCAIRN)     echo "-25.07|-130.10" ;;
     CLIPPERTON)   echo "10.30|-109.22" ;;
     GALAPAGOS)    echo "-0.95|-90.97" ;;
-    
+
     # ===== MOUNTAIN OBSERVATORIES =====
     MAUNA)        echo "19.54|-155.58" ;;
     JUNGFRAUJOCH) echo "46.55|7.98" ;;
-    
+
     # ===== EXTREME DESERTS =====
     MCMURDODRY)   echo "-77.85|163.00" ;;
     ATACAMA)      echo "-24.50|-69.25" ;;
-    
+
     # ===== OTHER NOTABLE REMOTE LOCATIONS =====
     GOUGH)        echo "-40.35|-9.88" ;;
     MARION)       echo "-46.88|37.86" ;;
@@ -389,7 +389,7 @@ get_special_coordinates(){
     AUCKLAND)     echo "-50.73|166.09" ;;
     KERMADEC)     echo "-29.25|-177.92" ;;
     CHATHAM)      echo "-43.95|-176.55" ;;
-    
+
     *) return 1 ;;
   esac
 }
@@ -442,7 +442,7 @@ openmeteo_condition_word(){
 write_condition_gsm(){
   local word="$(echo "$1" | awk '{print tolower($1)}')"
   local file1=""
-  
+
   # Try common sound directories
   for dir in /usr/share/asterisk/sounds/en/wx /var/lib/asterisk/sounds /usr/share/asterisk/sounds/en; do
     if [ -f "${dir}/${word}.gsm" ]; then
@@ -454,7 +454,7 @@ write_condition_gsm(){
       break
     fi
   done
-  
+
   if [ -n "$file1" ]; then
     cat "$file1" > "$destdir/condition.gsm"
   else
@@ -465,7 +465,7 @@ write_condition_gsm(){
 # ---------- Canadian FSA to City Mapping ----------
 get_canadian_city(){
   local fsa="$1"
-  
+
   # 3-character FSA mappings (Ontario focus)
   case "$fsa" in
     N7L) echo "Chatham-Kent, Ontario" ;;
@@ -476,7 +476,7 @@ get_canadian_city(){
     N1G|N1H|N1K|N1L) echo "Guelph, Ontario" ;;
     N3C|N3E|N3H) echo "Cambridge, Ontario" ;;
     N2C|N2E|N2G|N2H|N2J|N2K|N2L|N2M|N2N|N2P|N2R) echo "Kitchener, Ontario" ;;
-    
+
     # Single-letter fallbacks for major cities
     M*) echo "Toronto, Ontario" ;;
     V*) echo "Vancouver, British Columbia" ;;
@@ -490,7 +490,7 @@ get_canadian_city(){
     S*) echo "Regina, Saskatchewan" ;;
     E*) echo "Moncton, New Brunswick" ;;
     B*) echo "Halifax, Nova Scotia" ;;
-    
+
     *) return 1 ;;
   esac
 }
@@ -499,10 +499,10 @@ get_canadian_city(){
 postal_to_coordinates(){
   local postal="$1"
   local country="${default_country:-us}"
-  
+
   local url=""
   local postal_upper="$(echo "$postal" | toupper)"
-  
+
   if [[ "$postal_upper" =~ ^[0-9]{5}$ ]]; then
     # 5-digit: US/Germany/France - use default_country
     url="https://nominatim.openstreetmap.org/search?postalcode=${postal}&country=${country}&format=json&limit=1"
@@ -514,33 +514,33 @@ postal_to_coordinates(){
     # Try generic postal code search
     url="https://nominatim.openstreetmap.org/search?postalcode=${postal}&format=json&limit=1"
   fi
-  
+
   local response lat lon
   response="$(curl -fsS "$url" 2>/dev/null || true)"
-  
+
   if [ -n "$response" ] && [ "$response" != "[]" ]; then
     lat="$(echo "$response" | sed -n 's/.*"lat":"\([^"]*\)".*/\1/p' | head -n1)"
     lon="$(echo "$response" | sed -n 's/.*"lon":"\([^"]*\)".*/\1/p' | head -n1)"
-    
+
     if [ -n "$lat" ] && [ -n "$lon" ]; then
       echo "$lat|$lon"
       return 0
     fi
   fi
-  
+
   # Canadian FSA fallback
   if [[ "$postal_upper" =~ ^[A-Z][0-9][A-Z] ]]; then
     local fsa="${postal_upper:0:3}"
     local city="$(get_canadian_city "$fsa" || true)"
-    
+
     if [ -n "$city" ]; then
       sleep 1  # Rate limit
       response="$(curl -fsS "https://nominatim.openstreetmap.org/search?q=$(echo "$city" | sed 's/ /%20/g')&format=json&limit=1" 2>/dev/null || true)"
-      
+
       if [ -n "$response" ] && [ "$response" != "[]" ]; then
         lat="$(echo "$response" | sed -n 's/.*"lat":"\([^"]*\)".*/\1/p' | head -n1)"
         lon="$(echo "$response" | sed -n 's/.*"lon":"\([^"]*\)".*/\1/p' | head -n1)"
-        
+
         if [ -n "$lat" ] && [ -n "$lon" ]; then
           echo "$lat|$lon"
           return 0
@@ -548,7 +548,7 @@ postal_to_coordinates(){
       fi
     fi
   fi
-  
+
   return 1
 }
 
@@ -556,20 +556,20 @@ postal_to_coordinates(){
 fetch_metar(){
   local icao="$(echo "$1" | toupper)"
   local metar temp_f cond
-  
+
   # Try NOAA Aviation Weather API
   metar="$(curl --connect-timeout 15 -fsS "https://aviationweather.gov/api/data/metar?ids=${icao}&format=raw&hours=0&taf=false" 2>/dev/null | head -n1 || true)"
-  
+
   # Fallback to NWS
   if [ -z "$metar" ]; then
     metar="$(curl --connect-timeout 15 -fsS "https://tgftp.nws.noaa.gov/data/observations/metar/stations/${icao}.TXT" 2>/dev/null | tail -n1 || true)"
   fi
-  
+
   [ -z "$metar" ] && return 1
-  
+
   temp_f="$(parse_metar_temp_f "$metar" || true)"
   [ -z "$temp_f" ] && return 1
-  
+
   cond="$(metar_condition_word "$metar")"
   echo "$temp_f|$cond"
 }
@@ -577,7 +577,7 @@ fetch_metar(){
 # ---------- Provider: Open-Meteo ----------
 fetch_openmeteo(){
   local location="$1"
-  
+
   # Check if it's a special location first
   local coords
   if is_special_location "$location"; then
@@ -586,27 +586,27 @@ fetch_openmeteo(){
     # Get coordinates from postal code
     coords="$(postal_to_coordinates "$location" || true)"
   fi
-  
+
   [ -z "$coords" ] && return 1
-  
+
   lat="${coords%%|*}"
   lon="${coords##*|}"
   [ -z "$lat" ] || [ -z "$lon" ] && return 1
-  
+
   # Fetch weather from Open-Meteo with is_day for day/night detection
   local data temp code isday
   data="$(curl -fsS "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&temperature_unit=fahrenheit&timezone=auto" 2>/dev/null || true)"
-  
+
   temp="$(echo "$data" | sed -n 's/.*"temperature_2m":\s*\([-0-9.]\+\).*/\1/p' | head -n1)"
   code="$(echo "$data" | sed -n 's/.*"weather_code":\s*\([0-9]\+\).*/\1/p' | head -n1)"
   isday="$(echo "$data" | sed -n 's/.*"is_day":\s*\([01]\).*/\1/p' | head -n1)"
-  
+
   [ -z "$temp" ] && return 1
-  
+
   local tf="$(round "$temp")"
   [ -z "$isday" ] && isday="1"
   local cond="$(openmeteo_condition_word "${code:-0}" "${isday}")"
-  
+
   echo "$tf|$cond"
 }
 
