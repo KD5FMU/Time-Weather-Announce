@@ -191,48 +191,46 @@ else
 
       # Try to create config file
       if cat > "$config_file" 2>/dev/null <<'EOF'
-; ============================================================================
-; Weather Configuration for saytime-weather
-; ============================================================================
-; This file controls how weather data is fetched and announced.
-; All settings have sensible defaults - no changes required to get started!
-; ============================================================================
+# ============================================================================
+# Weather Configuration for saytime-weather
+# ============================================================================
+# This file controls how weather data is fetched and announced.
+# All settings have sensible defaults - no changes required to get started!
+# ============================================================================
 
-[weather]
+# Temperature display mode: F for Fahrenheit, C for Celsius
+# Default: F
+Temperature_mode="F"
 
-; Temperature display mode: F for Fahrenheit, C for Celsius
-; Default: F
-Temperature_mode = F
+# Process and announce weather conditions (cloudy, rain, clear, etc.)
+# Set to NO to only announce temperature
+# Default: YES
+process_condition="YES"
 
-; Process and announce weather conditions (cloudy, rain, clear, etc.)
-; Set to NO to only announce temperature
-; Default: YES
-process_condition = YES
+# Default country for ambiguous postal code lookups
+# Use ISO 3166-1 alpha-2 country codes: us, ca, de, fr, uk, etc.
+# Default: us
+default_country="us"
 
-; Default country for ambiguous postal code lookups
-; Use ISO 3166-1 alpha-2 country codes: us, ca, de, fr, uk, etc.
-; Default: us
-default_country = us
+# Weather data provider: auto, metar, or openmeteo
+# Default: auto (tries best source automatically)
+DEFAULT_PROVIDER="auto"
 
-; Weather data provider: auto, metar, or openmeteo
-; Default: auto (tries best source automatically)
-DEFAULT_PROVIDER = auto
-
-; ============================================================================
-; USAGE EXAMPLES
-; ============================================================================
-;
-; Test weather for your location:
-;   weather.sh KJFK v          # JFK Airport
-;   weather.sh 90210 v         # Beverly Hills, CA
-;   weather.sh M5H2N2 v        # Toronto, ON
-;   weather.sh ALERT v         # Alert, Nunavut
-;
-; With options:
-;   weather.sh -d fr 75001     # Paris with French lookup
-;   weather.sh -t C KJFK       # JFK in Celsius
-;
-; ============================================================================
+# ============================================================================
+# USAGE EXAMPLES
+# ============================================================================
+#
+# Test weather for your location:
+#   weather.sh KJFK v          # JFK Airport
+#   weather.sh 90210 v         # Beverly Hills, CA
+#   weather.sh M5H2N2 v        # Toronto, ON
+#   weather.sh ALERT v         # Alert, Nunavut
+#
+# With options:
+#   weather.sh -d fr 75001     # Paris with French lookup
+#   weather.sh -t C KJFK       # JFK in Celsius
+#
+# ============================================================================
 EOF
       then
         chmod 644 "$config_file" 2>/dev/null || true
@@ -444,7 +442,7 @@ write_condition_gsm(){
   local file1=""
 
   # Try common sound directories
-  for dir in /usr/share/asterisk/sounds/en/wx /var/lib/asterisk/sounds /usr/share/asterisk/sounds/en; do
+  for dir in /usr/local/share/asterisk/sounds/custom /usr/share/asterisk/sounds/en/wx /var/lib/asterisk/sounds /usr/share/asterisk/sounds/en; do
     if [ -f "${dir}/${word}.gsm" ]; then
       file1="${dir}/${word}.gsm"
       break
