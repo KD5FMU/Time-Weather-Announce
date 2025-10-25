@@ -93,7 +93,7 @@ rm -f "$ZIP_FILE"
 echo "Setting permissions and ownership for extracted files..."
 find "$SOUNDS_DIR" -type d -exec chown asterisk:asterisk {} \;
 find "$SOUNDS_DIR" -type d -exec chmod 775 {} \;
-find "$SOUNDS_DIR" -name "*.gsm" -exec chmod 664 {} \;
+find "$SOUNDS_DIR" -name "*.gsm" -exec chmod 644 {} \;
 find "$SOUNDS_DIR" -name "*.gsm" -exec chown asterisk:asterisk {} \;
 
 # Set up a cron job for hourly announcements
