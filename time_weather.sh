@@ -55,8 +55,8 @@ apt install -y bc zip plocate || {
 # Download and set up scripts
 echo "Setting up required scripts..."
 mkdir -p "$BIN_DIR"
-curl -s -o "${BIN_DIR}/saytime.pl" "$SAYTIME_URL" && chmod +x "${BIN_DIR}/saytime.pl"
-curl -s -o "${BIN_DIR}/weather.sh" "$WEATHER_URL" && chmod +x "${BIN_DIR}/weather.sh"
+curl -s -o "${BIN_DIR}/saytime.pl" "$SAYTIME_URL" && chmod +x "${BIN_DIR}/saytime.pl" && chown asterisk:asterisk "${BIN_DIR}/saytime.pl"
+curl -s -o "${BIN_DIR}/weather.sh" "$WEATHER_URL" && chmod +x "${BIN_DIR}/weather.sh" && chown asterisk:asterisk "${BIN_DIR}/weather.sh"
 
 # Edit the path for sound files in saytime.pl
 echo "Adjusting sounds dir in "${BIN_DIR}/saytime.pl""
@@ -76,9 +76,9 @@ if [ ! -d "$SOUNDS_DIR" ]; then
     mkdir -p "$SOUNDS_DIR"
     echo "Directory '$SOUNDS_DIR' created."
 
-    # Set ownership to root:asterisk
-    chown root:asterisk "$SOUNDS_DIR"
-    echo "Ownership of '$SOUNDS_DIR' set to root:asterisk."
+    # Set ownership to asterisk:asterisk
+    chown asterisk:asterisk "$SOUNDS_DIR"
+    echo "Ownership of '$SOUNDS_DIR' set to asterisk:asterisk."
 else
     echo "Directory '$SOUNDS_DIR' already exists."
 fi
@@ -88,6 +88,13 @@ echo "Downloading and extracting sound files..."
 curl -s -o "$ZIP_FILE" "$SOUND_ZIP_URL"
 unzip -o "$ZIP_FILE" -d "$SOUNDS_DIR" > /dev/null 2>&1
 rm -f "$ZIP_FILE"
+
+# Set proper permissions and ownership after extraction
+echo "Setting permissions and ownership for extracted files..."
+find "$SOUNDS_DIR" -type d -exec chown asterisk:asterisk {} \;
+find "$SOUNDS_DIR" -type d -exec chmod 775 {} \;
+find "$SOUNDS_DIR" -name "*.gsm" -exec chmod 644 {} \;
+find "$SOUNDS_DIR" -name "*.gsm" -exec chown asterisk:asterisk {} \;
 
 # Set up a cron job for hourly announcements
 echo "Configuring hourly time and weather announcements..."
