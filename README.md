@@ -12,7 +12,7 @@ cd
 
 Then Download this file
 ```
-wget https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/time_weather.sh
+sudo wget https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/heads/main/time_weather.sh
 ```
 and then make it executable.
 
