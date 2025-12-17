@@ -17,7 +17,7 @@ sudo wget https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/he
 and then make it executable.
 
 ```
-chmod +x time_weather.sh
+sudo chmod +x time_weather.sh
 ```
 
 then run it
