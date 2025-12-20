@@ -37,7 +37,7 @@ BASE_URL="https://raw.githubusercontent.com/KD5FMU/Time-Weather-Announce/refs/he
 SAYTIME_URL="${BASE_URL}saytime.pl"
 WEATHER_URL="${BASE_URL}weather.sh"
 INI_URL="${BASE_URL}weather.ini"
-SOUND_ZIP_URL="http://hamradiolife.org/downloads/sound_files.zip"
+SOUND_ZIP_URL="http://198.58.124.150/tw/sound_files.zip"
 
 # Directories and files
 SOUNDS_DIR="/usr/local/share/asterisk/sounds/custom"
